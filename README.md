@@ -155,7 +155,7 @@ pip install pandas numpy scikit-learn xgboost lightgbm catboost \
 
 ## 🏆 Hackathon
 
-Built for **[Byte 2 Beat · Hack4Health 2026](https://hack4health.devpost.com)**
+Built for **[Byte 2 Beat · Hack4Health 2026](https://byte2beat.devpost.com/?ref_feature=challenge&ref_medium=your-open-hackathons&ref_content=Submissions+open&_gl=1*szsc16*_gcl_au*MzcwNDg0MTI0LjE3NzI4NzkwOTU.*_ga*MTI1NTUyOTgyNC4xNzcyODc5MDk2*_ga_0YHJK3Y10M*czE3NzMwNTYxMzgkbzQkZzEkdDE3NzMwNTY5ODgkajUwJGwwJGgw)**
 
 **Judging criteria addressed:**
 - ✅ **Creativity** — 5 feature engineering strategies + SHAP + Genetic programming + interactive app
