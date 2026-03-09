@@ -73,15 +73,34 @@ Additional domain interactions tested (`bp_diff`, `bp_ratio`, `bmi_age`, etc.) â
 ### 4. RealMLP Architecture (Best Model)
 ```python
 RealMLP_TD_Classifier(
-    device='cuda',           # RTX 4050 GPU
-    n_hidden_layers=4,
-    hidden_width=384,        # rectangular hidden layers
-    act='mish',              # Mish activation
-    n_ens=8,                 # 8-model ensemble
-    n_epochs=100,
-    batch_size=128,
-    use_early_stopping=True,
-    val_metric_name='1-auc_ovr'
+    'device': 'cuda',
+    'random_state': 42,
+    'n_epochs': 100,
+    'batch_size': 128,
+    'n_ens': 8,
+    'val_metric_name': '1-auc_ovr',
+    'use_early_stopping': True,
+    'early_stopping_additive_patience': 20,
+    'early_stopping_multiplicative_patience': 1,
+    'act': "mish",
+    'embedding_size': 8,
+    'first_layer_lr_factor': 0.5962121993798933,
+    'hidden_sizes': "rectangular",
+    'hidden_width': 384,
+    'lr': 0.04,
+    'ls_eps': 0.011498317194338772,
+    'ls_eps_sched': "coslog4",
+    'max_one_hot_cat_size': 18,
+    'n_hidden_layers': 4,
+    'p_drop': 0.07301419697186451,
+    'p_drop_sched': "flat_cos",
+    'plr_hidden_1': 16,
+    'plr_hidden_2': 8,
+    'plr_lr_factor': 0.1151437622270563,
+    'plr_sigma': 2.3316811282666916,
+    'scale_lr_factor': 2.244801835541429,
+    'sq_mom': 1.0 - 0.011834054955582318,
+    'wd': 0.02369230879235962
 )
 ```
 
