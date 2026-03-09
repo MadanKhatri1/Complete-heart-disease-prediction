@@ -10,6 +10,8 @@
 > A machine learning system for early detection of cardiovascular disease, trained on 70,000 de-identified patient records. Achieves AUC **0.800** using RealMLP with GPU acceleration, SHAP explainability, and an interactive Streamlit web app.
 
 ---
+## Demo 
+<img width="1851" height="928" alt="image" src="https://github.com/user-attachments/assets/ec53141e-9efd-4746-9721-79e096b93a98" />
 
 ## 📊 Results
 
