@@ -173,8 +173,17 @@ hr { border-color: var(--border) !important; }
 # ── Load model ────────────────────────────────────────────────────────────────
 @st.cache_resource
 def load_model():
-    with open('cardiac_failure_model.pkl', 'rb') as f:
-        return pickle.load(f)
+    with open('best_model_v1_realmlp.pkl', 'rb') as f:
+        model = pickle.load(f)
+    # Force CPU — Streamlit Cloud has no GPU
+    try:
+        model.alg_interface_.device = 'cpu'
+        model.alg_interface_.to('cpu')
+        if hasattr(model.alg_interface_, 'model') and model.alg_interface_.model is not None:
+            model.alg_interface_.model = model.alg_interface_.model.cpu()
+    except Exception:
+        pass
+    return model
 
 try:
     model = load_model()
@@ -183,9 +192,6 @@ except:
     model_loaded = False
 
 
-# ── Feature config ────────────────────────────────────────────────────────────
-FEATURES = ['age', 'gender', 'height', 'weight', 'ap_hi', 'ap_lo',
-            'cholesterol', 'gluc', 'smoke', 'alco', 'active', 'bmi']
 
 
 # ── Header ────────────────────────────────────────────────────────────────────
@@ -204,7 +210,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if not model_loaded:
-    st.error("⚠️ Model file `cardiac_failure_model.pkl` not found. Place it in the same directory as this app.")
+    st.error("⚠️ Model file `best_model_v1_realmlp.pkl` not found. Place it in the same directory as this app.")
     st.stop()
 
 
@@ -217,7 +223,7 @@ with left:
     c1, c2 = st.columns(2)
     with c1:
         age_years = st.slider("Age (years)", 20, 80, 45)
-        age = age_years / 70.0  # since i do not have formula that was used to normalize using own formula 
+        age = (age_years * 365.25) / 23713  # raw days / max days in dataset
 
         height = st.slider("Height (cm)", 145, 190, 165)
         ap_hi  = st.slider("Systolic BP (ap_hi)", 80, 180, 120)
@@ -235,6 +241,7 @@ with left:
         alco   = st.selectbox("Alcohol intake", [0, 1], format_func=lambda x: "Yes" if x else "No")
 
     bmi = weight / (height / 100) ** 2
+    pulse_pressure = ap_hi - ap_lo
 
     st.markdown(f"""
     <div class="card" style="margin-top:1rem;">
@@ -245,12 +252,12 @@ with left:
                 <div style="color:#6b7280; font-size:0.8rem;">BMI</div>
             </div>
             <div>
-                <div style="font-family:'DM Mono',monospace; font-size:1.5rem; color:#e8e8e8;">{ap_hi - ap_lo}</div>
+                <div style="font-family:'DM Mono',monospace; font-size:1.5rem; color:#e8e8e8;">{pulse_pressure}</div>
                 <div style="color:#6b7280; font-size:0.8rem;">Pulse Pressure</div>
             </div>
             <div>
-                <div style="font-family:'DM Mono',monospace; font-size:1.5rem; color:#e8e8e8;">{age_years}</div>
-                <div style="color:#6b7280; font-size:0.8rem;">Age (yrs)</div>
+                <div style="font-family:'DM Mono',monospace; font-size:1.5rem; color:#e8e8e8;">{int(age_years * 365.25)}</div>
+                <div style="color:#6b7280; font-size:0.8rem;">Age (days)</div>
             </div>
         </div>
     </div>
@@ -263,10 +270,40 @@ with right:
     st.markdown("<p class='label'>Risk Assessment</p>", unsafe_allow_html=True)
 
     if predict_btn:
+        # v3 digit decomposition — computed from raw inputs
+        age_days = int(age_years * 365.25)
+
         input_data = pd.DataFrame([{
-            'age': age, 'gender': gender, 'height': height, 'weight': weight,
-            'ap_hi': ap_hi, 'ap_lo': ap_lo, 'cholesterol': cholesterol,
-            'gluc': gluc, 'smoke': smoke, 'alco': alco, 'active': active, 'bmi': bmi
+            # Original features
+            'age':        age,
+            'gender':     gender,
+            'height':     height,
+            'weight':     weight,
+            'ap_hi':      ap_hi,
+            'ap_lo':      ap_lo,
+            'cholesterol': cholesterol,
+            'gluc':       gluc,
+            'smoke':      smoke,
+            'alco':       alco,
+            'active':     active,
+            # ap_hi digits
+            'ap_hi_hundreds': ap_hi // 100,
+            'ap_hi_tens':     ap_hi % 100 // 10,
+            'ap_hi_units':    ap_hi % 10,
+            # ap_lo digits
+            'ap_lo_hundreds': ap_lo // 100,
+            'ap_lo_tens':     ap_lo % 100 // 10,
+            'ap_lo_units':    ap_lo % 10,
+            # height digits
+            'height_hundreds': height // 100,
+            'height_tens':     height % 100 // 10,
+            'height_units':    height % 10,
+            # weight digits
+            'weight_tens':  int(weight) // 10,
+            'weight_units': int(weight) % 10,
+            # age digits
+            'age_d1': int(age * 10) % 10,
+            'age_d2': int(age * 100) % 10,
         }])
 
         prob = model.predict_proba(input_data)[0][1]
@@ -366,7 +403,7 @@ with right:
             plt.close()
 
         except FileNotFoundError:
-            st.info("Place `shap_values.npy` and `X_test.csv` in the same folder to enable SHAP.")
+            st.info("ℹ️ Place `shap_values.npy` and `X_test.csv` in the same folder to enable SHAP.")
 
     else:
         st.markdown("""
@@ -394,7 +431,7 @@ st.markdown("""
         CardioSense AI · Hack4Health 2026 · Model AUC 0.800
     </div>
     <div style="color:#6b7280; font-size:0.78rem; font-family:'DM Mono',monospace;">
-         Not a substitute for medical advice
+        ⚠️ Not a substitute for medical advice
     </div>
 </div>
 """, unsafe_allow_html=True)
