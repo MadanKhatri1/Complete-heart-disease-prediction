@@ -11,6 +11,8 @@
 
 ---
 ## Demo 
+[Demo](https://complete-heart-disease-predictiongit-xhnxvwvnckzhxtrvlpzcyu.streamlit.app/)
+
 <img width="1851" height="928" alt="image" src="https://github.com/user-attachments/assets/ec53141e-9efd-4746-9721-79e096b93a98" />
 
 ## 📊 Results
