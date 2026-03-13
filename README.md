@@ -9,7 +9,6 @@
 
 > A machine learning system for early detection of cardiovascular disease, trained on 70,000 de-identified patient records. Achieves AUC **0.8003** using RealMLP (v3 digit decomposition) with GPU acceleration, SHAP explainability, and an interactive Streamlit web app.
 
----
 ## Demo 
 [Demo Link](https://complete-heart-disease-prediction-mdb7lraaou2dkeimggqcli.streamlit.app/)
 
@@ -185,16 +184,3 @@ Built for **[Byte 2 Beat](https://byte2beat.devpost.com/?_gl=1*kubg6p*_gcl_au*Mz
 
 CardioSense AI is an educational research tool built for Hack4Health 2026. It is **not** a substitute for professional medical advice, diagnosis, or treatment.
 
----
-
-## ⚠️ Known Limitations & Fixes
-
-### Smoking & Alcohol Risk Adjustment
-The core RealMLP model shows near-zero SHAP importance for `smoke` and `alco` features. This is a **known dataset limitation** — only 8.7% of patients reported smoking (self-reporting bias), so the model couldn't learn a strong signal from these features.
-
-**Fix applied in app:** A clinically-informed manual adjustment is added on top of the model output:
-- Smoker = Yes → +5% risk
-- Alcohol = Yes → +3% risk  
-- Both = Yes → +8% risk combined
-
-This keeps the core model intact while ensuring medically correct behavior in the app.
