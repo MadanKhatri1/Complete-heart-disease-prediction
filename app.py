@@ -307,15 +307,6 @@ with right:
         }])
 
         prob = model.predict_proba(input_data)[0][1]
-
-        # Manual adjustment for smoke/alcohol — these have near-zero SHAP
-        # in this dataset due to self-reporting bias (only 8.7% smokers)
-        # Adding clinically-informed adjustment on top of model output
-        if smoke == 1:
-            prob = min(1.0, prob + 0.05)
-        if alco == 1:
-            prob = min(1.0, prob + 0.03)
-
         pct  = prob * 100
 
         if pct >= 60:
@@ -437,7 +428,7 @@ st.markdown("""
 <div style="display:flex; justify-content:space-between; align-items:center;
             padding: 0.5rem 0 1.5rem 0;">
     <div style="color:#6b7280; font-size:0.78rem; font-family:'DM Mono',monospace;">
-        CardioSense AI · Hack4Health 2026 · Model AUC 0.800
+        CardioSense AI · Hack4Health 2026 · Model AUC 0.8003 (RealMLP v3)
     </div>
     <div style="color:#6b7280; font-size:0.78rem; font-family:'DM Mono',monospace;">
         ⚠️ Not a substitute for medical advice
