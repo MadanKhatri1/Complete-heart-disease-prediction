@@ -167,19 +167,6 @@ pip install pandas numpy scikit-learn xgboost lightgbm catboost \
 - **Target**: `cardio` — binary (0 = No CVD, 1 = CVD present), ~50/50 class balance
 
 ---
-
-## 🏆 Hackathon
-
-Built for **[Byte 2 Beat](https://byte2beat.devpost.com/?_gl=1*kubg6p*_gcl_au*MzcwNDg0MTI0LjE3NzI4NzkwOTU.*_ga*MTI1NTUyOTgyNC4xNzcyODc5MDk2*_ga_0YHJK3Y10M*czE3NzMzMjI5MTYkbzckZzEkdDE3NzMzMjMxOTAkajYwJGwwJGgw)**
-
-**Judging criteria addressed:**
-- ✅ **Creativity** — 5 feature engineering strategies + SHAP + Genetic programming + interactive app
-- ✅ **Technical Complexity** — RealMLP neural net + GPU + 8 ensembles + Optuna + KernelExplainer
-- ✅ **Practicality** — Deployable Streamlit app, real clinical workflow, medically coherent SHAP findings
-- ✅ **Presentation** — Full 3-page PDF report, SHAP plots, risk gauge UI
-
----
-
 ## ⚠️ Disclaimer
 
 CardioSense AI is an educational research tool built for Hack4Health 2026. It is **not** a substitute for professional medical advice, diagnosis, or treatment.
